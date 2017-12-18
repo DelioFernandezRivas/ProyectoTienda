@@ -1,5 +1,23 @@
+import gi
+gi.require_version('Gtk','3.0')
 from gi.repository import Gtk
 import sqlite3
+
+
+#Creamos las listas:
+#Lista prodcutos con 5 datos: Identificador,Nombre,precio,tipo
+store = Gtk.ListStore(str, str, int,str)
+Listaproductos = [
+("VDE5","Figura1",65,"WarhammerType"),
+("VAD3","Figura2",32,"Warhammer40Type"),
+("HYH5","MaquetaTank1",48,"TanksWII"),
+("ACE2","Pinturas1",67,"PinturasType"),
+("HTR5", "Figura3",21,"WarhammerType"),
+]
+
+treeView = Gtk.TreeView(Listaproductos)
+cellRenderer = Gtk.CellRendererText()
+column = Gtk.TreeViewColumn("Title", renderer, text=0)
 
 
 class VentanaInicio(Gtk.Window):
@@ -153,16 +171,16 @@ class VentanaGestionClientes(Gtk.Window):
         self.Pedidos2 = Gtk.Label("Pedidos:")
 
         self.Boton1 = Gtk.Button("Salir")
-        self.Boton2 = Gtk.Button("Borrar ingreso")
+        self.Boton2 = Gtk.Button("Borrar")
         self.Boton3 = Gtk.Button("Aceptar")
-        self.Boton4 = Gtk.Button("Ver Clientes")
         self.Boton5 = Gtk.Button("Volver al menu")
 
         # Creamos las conecsiones
 
         self.Boton1.connect("clicked", Gtk.main_quit)
         self.Boton5.connect("clicked", self.do_clicked)
-
+        self.Boton2.connect("clicked", self.do_clicked4)
+        self.Boton3.connect("clicked", self.do_clicked5)
 
         TextoBoton1 = Gtk.Label("Este label cambia")
 
@@ -198,14 +216,12 @@ class VentanaGestionClientes(Gtk.Window):
 
         Tabla.attach(self.Boton3, 5, 6, 7, 8)
 
-        Tabla.attach(self.Boton4, 5, 6, 1, 2)
-
         Tabla.attach(self.Boton5, 2, 3, 7, 8)
 
         # Añadimos la caja al self y mostramos todo
         self.add(Caja1)
         self.show_all()
-#Vamos unidendo las ventanas con estos metodos
+#Vamos unidendo las ventanas con estos metodos y creando otros metodos necesarios
     def do_clicked(self, Ventana1):
             VentanaInicio()
             self.set_visible(False)
@@ -218,6 +234,28 @@ class VentanaGestionClientes(Gtk.Window):
             VentanaGestionTrabajadores()
             self.set_visible(False)
             self.set_position(Gtk.WindowPosition.CENTER)
+    def do_clicked4(self,Ventana4):
+            self.DNI.set_text("")
+            self.Nombre.set_text("")
+            self.Apellidos.set_text("")
+            self.NumeroTelefono.set_text("")
+            self.Pedidos.set_text("")
+    def do_clicked5(self, Ventana4):
+        self.Ventanasalida=Gtk.Window()
+        Cajaventana=Gtk.Box()
+        self.Ventanasalida.add(Cajaventana)
+        Tablaventana=Gtk.Table()
+        Tablaventana.set_homogeneous(True)
+        BotonAceptar = Gtk.Button("Aceptar")
+        LabelVentanasalida = Gtk.Label("Se a Añadido con exito")
+        Tablaventana.attach(BotonAceptar, 1,2, 1, 2)
+        Tablaventana.attach(LabelVentanasalida, 0, 3, 0, 1)
+        Cajaventana.add(Tablaventana)
+        BotonAceptar.connect("clicked",self.do_clicked6)
+        self.Ventanasalida.show_all()
+    def do_clicked6(self,Ventana6):
+        self.Ventanasalida.set_visible(False)
+
 
 class VentanaGestionProductos(Gtk.Window):
             # Esta sin terminar:
@@ -232,32 +270,31 @@ class VentanaGestionProductos(Gtk.Window):
                 Caja1.set_orientation(Gtk.Orientation.HORIZONTAL)
                 Tabla = Gtk.Table(5, 5, False)
                 Tabla2 = Gtk.Table(5, 5, False)
+                NombreVentana = Gtk.Label("Ingreso Productos")
 
-                Identificador = Gtk.Entry()
-                Identificador2 = Gtk.Label("Identificador:")
+                self.Identificador = Gtk.Entry()
+                self.Identificador2 = Gtk.Label("Identificador:")
 
-                Nombre = Gtk.Entry()
-                Nombre2 = Gtk.Label("Nombre:")
+                self.Nombre = Gtk.Entry()
+                self.Nombre2 = Gtk.Label("Nombre:")
 
-                Precio = Gtk.Entry()
-                Precio2 = Gtk.Label("Precio:")
+                self.Precio = Gtk.Entry()
+                self.Precio2 = Gtk.Label("Precio:")
 
-                Tipo = Gtk.Entry()
-                Tipo2= Gtk.Label("Tipo:")
+                self.Tipo = Gtk.Entry()
+                self.Tipo2= Gtk.Label("Tipo:")
 
-
-
-                Boton1 = Gtk.Button("Salir")
-                Boton2 = Gtk.Button("Borrar ingreso")
-                Boton3 = Gtk.Button("Aceptar")
-                Boton4 = Gtk.Button("Ver Clientes")
-                Boton5 = Gtk.Button("Volver al menu")
+                self.Boton1 = Gtk.Button("Salir")
+                self.Boton2 = Gtk.Button("Borrar")
+                self.Boton3 = Gtk.Button("Aceptar")
+                self.Boton5 = Gtk.Button("Volver al menu")
 
                 # Creamos las conecsiones
 
-                Boton1.connect("clicked", Gtk.main_quit)
-                Boton5.connect("clicked", self.do_clicked)
-
+                self.Boton1.connect("clicked", Gtk.main_quit)
+                self.Boton5.connect("clicked", self.do_clicked)
+                self.Boton2.connect("clicked", self.do_clicked5)
+                self.Boton3.connect("clicked", self.do_clicked6)
 
                 # Añadimos la tabla, le damos la orientacion yespaciados y la hacemos homogenea
                 Caja1.add(Tabla)
@@ -265,27 +302,28 @@ class VentanaGestionProductos(Gtk.Window):
                 Tabla.set_row_spacings(25)
                 Tabla.set_col_spacings(25)
                 Tabla.set_homogeneous(True)
-                Tabla.attach(Identificador2, 0, 1, 1, 2)
-                Tabla.attach(Identificador, 1, 2, 1, 2)
 
-                Tabla.attach(Nombre2, 0, 1, 2, 3)
-                Tabla.attach(Nombre, 1, 2, 2, 3)
+                Tabla.attach(NombreVentana, 2, 4, 0, 1)
 
-                Tabla.attach(Precio2, 0, 1, 3, 4)
-                Tabla.attach(Precio, 1, 2, 3, 4)
+                Tabla.attach(self.Identificador2, 0, 1, 1, 2)
+                Tabla.attach(self.Identificador, 1, 2, 1, 2)
 
-                Tabla.attach(Tipo2, 0, 1, 4, 5)
-                Tabla.attach(Tipo, 1, 2, 4, 5)
+                Tabla.attach(self.Nombre2, 0, 1, 2, 3)
+                Tabla.attach(self.Nombre, 1, 2, 2, 3)
 
-                Tabla.attach(Boton1, 0, 1, 7, 8)
+                Tabla.attach(self.Precio2, 0, 1, 3, 4)
+                Tabla.attach(self.Precio, 1, 2, 3, 4)
 
-                Tabla.attach(Boton2, 3, 4, 7, 8)
+                Tabla.attach(self.Tipo2, 0, 1, 4, 5)
+                Tabla.attach(self.Tipo, 1, 2, 4, 5)
 
-                Tabla.attach(Boton3, 5, 6, 7, 8)
+                Tabla.attach(self.Boton1, 0, 1, 7, 8)
 
-                Tabla.attach(Boton4, 5, 6, 1, 2)
+                Tabla.attach(self.Boton2, 3, 4, 7, 8)
 
-                Tabla.attach(Boton5, 2, 3, 7, 8)
+                Tabla.attach(self.Boton3, 5, 6, 7, 8)
+
+                Tabla.attach(self.Boton5, 2, 3, 7, 8)
 
                 # Añadimos la caja al self y mostramos todo
                 self.add(Caja1)
@@ -306,6 +344,35 @@ class VentanaGestionProductos(Gtk.Window):
                     self.set_visible(False)
                     self.set_position(Gtk.WindowPosition.CENTER)
 
+            #def do_clicked4(self, Ventana4):
+                #VentanaverProductos()
+                #self.set_visible(False)
+                #self.set_position(Gtk.WindowPosition.CENTER)
+
+            def do_clicked5(self, Ventana4):
+                    self.Identificador.set_text("")
+                    self.Nombre.set_text("")
+                    self.Precio.set_text("")
+                    self.Tipo.set_text("")
+
+            def do_clicked6(self, Ventana4):
+                self.Ventanasalida = Gtk.Window()
+                Cajaventana = Gtk.Box()
+                self.Ventanasalida.add(Cajaventana)
+                Tablaventana = Gtk.Table()
+                Tablaventana.set_homogeneous(True)
+                BotonAceptar = Gtk.Button("Aceptar")
+                LabelVentanasalida = Gtk.Label("Se a Añadido con exito")
+                Tablaventana.attach(BotonAceptar, 1, 2, 1, 2)
+                Tablaventana.attach(LabelVentanasalida, 0, 3, 0, 1)
+                Cajaventana.add(Tablaventana)
+                BotonAceptar.connect("clicked", self.do_clicked7)
+                self.Ventanasalida.show_all()
+
+            def do_clicked7(self, Ventana6):
+                self.Ventanasalida.set_visible(False)
+
+
 
 class VentanaGestionTrabajadores(Gtk.Window):
             def __init__(self):
@@ -316,63 +383,68 @@ class VentanaGestionTrabajadores(Gtk.Window):
                 Caja1 = Gtk.Box()
                 Caja1.set_orientation(Gtk.Orientation.HORIZONTAL)
                 Tabla = Gtk.Table(5, 5, False)
+                NombreVentana = Gtk.Label("Ingreso Trabajadores")
 
-                DNI = Gtk.Entry()
-                DNI2 = Gtk.Label("DNI:")
+                self.DNI = Gtk.Entry()
+                self.DNI2 = Gtk.Label("DNI:")
 
-                Nombre = Gtk.Entry()
-                Nombre2 = Gtk.Label("Nombre:")
+                self.Nombre = Gtk.Entry()
+                self.Nombre2 = Gtk.Label("Nombre:")
 
-                Apellidos = Gtk.Entry()
-                Apellidos2 = Gtk.Label("Apellidos:")
+                self.Apellidos = Gtk.Entry()
+                self.Apellidos2 = Gtk.Label("Apellidos:")
 
-                NumeroTelefono = Gtk.Entry()
-                NumeroTelefono2 = Gtk.Label("Numero de Teléfono:")
+                self.NumeroTelefono = Gtk.Entry()
+                self.NumeroTelefono2 = Gtk.Label("Numero de Teléfono:")
 
-                Direccion = Gtk.Entry()
-                Direccion2 = Gtk.Label("Direccion:")
+                self.Direccion = Gtk.Entry()
+                self.Direccion2 = Gtk.Label("Direccion:")
 
-                Boton1 = Gtk.Button("Salir")
-                Boton2 = Gtk.Button("Borrar ingreso")
-                Boton3 = Gtk.Button("Aceptar")
-                Boton4 = Gtk.Button("Ver Empleados")
-                Boton5 = Gtk.Button("Volver al menu")
+                self.Boton1 = Gtk.Button("Salir")
+                self.Boton2 = Gtk.Button("Borrar")
+                self.Boton3 = Gtk.Button("Aceptar")
+                self.Boton5 = Gtk.Button("Volver al menu")
 
                 # Creamos las conecsiones
 
-                Boton1.connect("clicked", Gtk.main_quit)
-                Boton5.connect("clicked", self.do_clicked)
+                self.Boton1.connect("clicked", Gtk.main_quit)
+                self.Boton5.connect("clicked", self.do_clicked)
+                self.Boton2.connect("clicked", self.do_clicked4)
+                self.Boton3.connect("clicked", self.do_clicked5)
 
                 # Añadimos la tabla, le damos la orientacion y espaciados y la hacemos homogenea
                 Caja1.add(Tabla)
                 Caja1.set_orientation(Gtk.Orientation.VERTICAL)
+
+                Tabla.attach(NombreVentana, 2, 4, 0, 1)
+
                 Tabla.set_row_spacings(25)
                 Tabla.set_col_spacings(25)
                 Tabla.set_homogeneous(True)
-                Tabla.attach(DNI2, 0, 1, 1, 2)
-                Tabla.attach(DNI, 1, 2, 1, 2)
 
-                Tabla.attach(Nombre2, 0, 1, 2, 3)
-                Tabla.attach(Nombre, 1, 2, 2, 3)
+                Tabla.attach(self.DNI2, 0, 1, 1, 2)
+                Tabla.attach(self.DNI, 1, 2, 1, 2)
 
-                Tabla.attach(Apellidos2, 0, 1, 3, 4)
-                Tabla.attach(Apellidos, 1, 2, 3, 4)
+                Tabla.attach(self.Nombre2, 0, 1, 2, 3)
+                Tabla.attach(self.Nombre, 1, 2, 2, 3)
 
-                Tabla.attach(NumeroTelefono2, 0, 1, 4, 5)
-                Tabla.attach(NumeroTelefono, 1, 2, 4, 5)
+                Tabla.attach(self.Apellidos2, 0, 1, 3, 4)
+                Tabla.attach(self.Apellidos, 1, 2, 3, 4)
 
-                Tabla.attach(Direccion2, 0, 1, 5, 6)
-                Tabla.attach(Direccion, 1, 2, 5, 6)
+                Tabla.attach(self.NumeroTelefono2, 0, 1, 4, 5)
+                Tabla.attach(self.NumeroTelefono, 1, 2, 4, 5)
 
-                Tabla.attach(Boton1, 0, 1, 7, 8)
+                Tabla.attach(self.Direccion2, 0, 1, 5, 6)
+                Tabla.attach(self.Direccion, 1, 2, 5, 6)
 
-                Tabla.attach(Boton2, 3, 4, 7, 8)
+                Tabla.attach(self.Boton1, 0, 1, 7, 8)
 
-                Tabla.attach(Boton3, 5, 6, 7, 8)
+                Tabla.attach(self.Boton2, 3, 4, 7, 8)
 
-                Tabla.attach(Boton4, 5, 6, 1, 2)
+                Tabla.attach(self.Boton3, 5, 6, 7, 8)
 
-                Tabla.attach(Boton5, 2, 3, 7, 8)
+
+                Tabla.attach(self.Boton5, 2, 3, 7, 8)
 
                 # Añadimos la caja al self y mostramos todo
                 self.add(Caja1)
@@ -391,6 +463,31 @@ class VentanaGestionTrabajadores(Gtk.Window):
                 VentanaGestionTrabajadores()
                 self.set_visible(False)
 
+            def do_clicked4(self, Ventana4):
+                    self.DNI.set_text("")
+                    self.Nombre.set_text("")
+                    self.Apellidos.set_text("")
+                    self.NumeroTelefono.set_text("")
+                    self.Direccion.set_text("")
+
+            def do_clicked5(self, Ventana4):
+                self.Ventanasalida = Gtk.Window()
+                Cajaventana = Gtk.Box()
+                self.Ventanasalida.add(Cajaventana)
+                Tablaventana = Gtk.Table()
+                Tablaventana.set_homogeneous(True)
+                BotonAceptar = Gtk.Button("Aceptar")
+                LabelVentanasalida = Gtk.Label("Se a Añadido con exito")
+                Tablaventana.attach(BotonAceptar, 1, 2, 1, 2)
+                Tablaventana.attach(LabelVentanasalida, 0, 3, 0, 1)
+                Cajaventana.add(Tablaventana)
+                BotonAceptar.connect("clicked", self.do_clicked6)
+                self.Ventanasalida.show_all()
+
+            def do_clicked6(self, Ventana6):
+                self.Ventanasalida.set_visible(False)
+
+
 
 
 
@@ -402,6 +499,8 @@ if __name__ == "__main__":
      Gtk.main()
 
 
+
+#Creamos la base de Datos
 conn = sqlite3.connect('Base.')
 
 cursor=conn.cursor()
@@ -421,18 +520,13 @@ def creartabla(self):
 
 def insertar(self):
 
-    cursor.execute("INSERT INTO tablaproductos(Identificador,Nombre,Precio,Imagen) VALUES('1234A','Warhammer Quest',25.4,"")")
+    cursor.execute("INSERT INTO tablaproductos VALUES(?, ?, ?, ?, ?)")
 
-    cursor.execute("INSERT INTO tablaproductos(Identificador,Nombre,Precio,Imagen) VALUES('2234A','Figura Space marine de los Ultramarines',28.4,"")")
 
-    cursor.execute("INSERT INTO tablaproductos(Identificador,Nombre,Precio,Imagen) VALUES('3234A','Tanque de batalla version leman Russ Guardia imperial',100.4,"")")
 
-    cursor.execute("INSERT INTO tablaproductos(Identificador,Nombre,Precio,Imagen) VALUES('4234A','Primarca Roboute Guilliman Ultramarines',75.4,"")")
-creartabla()
-insertar()
+
+
 
 conn.close()
-# Realizamos el correspondiente if
-if __name__ == "__main__":
-     VentanaInicio()
-     Gtk.main()
+
+
